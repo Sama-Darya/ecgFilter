@@ -25,6 +25,15 @@ Net* net = new Net(NLAYERS, nNeuronsp, NINPUTS);
 double* inputs = NULL;
 
 
+// define gains:
+double errorGain = 1;
+double outputGain = 1;
+double signalGain = 1;
+double xAccGain = 1;
+double yAccGain = 1;
+double zAccGain = 1;
+
+
 //creat circular buffers for plotting
 boost::circular_buffer<double> xAccBuffer(1000);
 boost::circular_buffer<double> yAccBuffer(1000);

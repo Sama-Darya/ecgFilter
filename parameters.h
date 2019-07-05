@@ -16,17 +16,6 @@
 
 #define LEARNINGRATE 0.1
 
-
-#define errorGain 1;
-#define outputGain 1;
-#define signalGain 1;
-
-#define xAccGain 1;
-#define yAccGain 1;
-#define zAccGain 1;
-
-
-
 #endif //ECGFILTER_PARAMETERS_H
 
 
