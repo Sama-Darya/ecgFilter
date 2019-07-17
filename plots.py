@@ -33,11 +33,11 @@ def rmsValue(arr, n):
       
     return root
 
-dataECG=np.loadtxt('./results/dataset01/sub00walk.tsv');
-dataError=np.loadtxt('./results/dataset01/errorECG.tsv');
-dataOutput=np.loadtxt('./results/dataset01/outputECG.tsv');
-dataSignal=np.loadtxt('./results/dataset01/signalECG.tsv');
-dataControl=np.loadtxt('./results/dataset01/controlECG.tsv');
+dataECG=np.loadtxt('./cmake-build-debug/sub00walk.tsv');
+dataError=np.loadtxt('./cmake-build-debug/errorECG.tsv');
+dataOutput=np.loadtxt('./cmake-build-debug/outputECG.tsv');
+dataSignal=np.loadtxt('./cmake-build-debug/signalECG.tsv');
+dataControl=np.loadtxt('./cmake-build-debug/controlECG.tsv');
 
 control=dataECG[:,0]
 signal2=dataECG[:,1]
@@ -57,20 +57,20 @@ plt.subplot(313)
 plt.plot(zAcc[0::])
 
 
-dataSignal = dataSignal/ max(abs(dataSignal))
-dataOutput2 = dataOutput +  abs(min(dataOutput))
-dataOutput3 =  - dataOutput2 / max(dataOutput2)
-
-experiment = dataSignal - 100 * dataOutput3
+#dataSignal = dataSignal/ max(abs(dataSignal))
+#dataOutput2 = dataOutput +  abs(min(dataOutput))
+#dataOutput3 =  - dataOutput2 / max(dataOutput2)
+#
+#experiment = dataSignal - 100 * dataOutput3
 
 
 plt.figure('this one')
 plt.subplot(311)
 plt.plot(dataSignal[4000::])
 plt.subplot(312)
-plt.plot(dataOutput3[4000::])
+plt.plot(dataOutput[4000::])
 plt.subplot(313)
-plt.plot(experiment[4000::])
+plt.plot(dataError[4000::])
 
 
 #diff = dataSignal[4000::] - dataError[4000::]

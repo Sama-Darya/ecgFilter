@@ -96,11 +96,14 @@ double Neuron::getSumOutput(){
 
 double Neuron::doActivation(double _sum){
     output=1/(1+(exp(-_sum))) - 0.5;
+    //output = tanh(_sum);
     return (output);
 }
 
 double Neuron::doActivationPrime(double _input){
-    double result= (doActivation(_input) + 0.5) * (1 - doActivation(_input) + 0.5);
+    double result = exp(-_input) / pow((exp(-_input) + 1),2);
+    //double result = 1 - pow (tanh(_input), 2);
+    //double result= (doActivation(_input) + 0.5) * (1 - doActivation(_input) + 0.5);
     return (result);
 }
 
@@ -116,13 +119,13 @@ void Neuron::setError(double _leadError){
 
 void Neuron::propError(double _nextSum){
     error=0;
-    error = _nextSum; //+ doActivationPrime(sum);
+    error = _nextSum + doActivationPrime(sum);
     //cout<< "_nextSum was: "<< _nextSum << "and dSigmadt is: " << doActivationPrime(sum) <<endl;
 }
 
 void Neuron::updateWeights(){
     for (int i=0; i<nInputs; i++){
-        weights[i] -= learningRate * (error * inputs[i]); //
+        weights[i] += learningRate * (error * inputs[i]); //
         //weights[i] = Neuron::doActivation(weights[i]); //normalised weights
         //cout<< "Neuron: internal error is: " << error << endl;
     }
@@ -132,7 +135,7 @@ double Neuron::getWeightChange(){
     double weightsDifference =0;
     for (int i=0; i<nInputs; i++){
         weightsDifference = weights[i] - initialWeights[i];
-        weightChange += weightsDifference*weightsDifference;
+        weightChange += weightsDifference * weightsDifference;
     }
     //cout<< "Neuron: WeightChange is: " << weightChange << endl;
     return (weightChange);

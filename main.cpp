@@ -65,6 +65,15 @@ boost::circular_buffer<double> errorLMSBuffer(1000);
 
 int main(int argc, const char *argv[]) {
 
+    fstream errorlog;
+    errorlog.open("errorECG.tsv", fstream::out);
+    fstream outputlog;
+    outputlog.open("outputECG.tsv", fstream::out);
+    fstream signallog;
+    signallog.open("signalECG.tsv", fstream::out);
+    fstream controllog;
+    controllog.open("controlECG.tsv", fstream::out);
+
 // initialise filters
     lmsFilter = new Fir1*[totalNINPUTS];
     for(int i=0;i<totalNINPUTS;i++){
@@ -251,14 +260,7 @@ int main(int argc, const char *argv[]) {
         //cout << ": (error: " << leadError << " output: " << outPut << ")" << endl;
 
 //save the data in files
-        fstream errorlog;
-        errorlog.open("errorECG.tsv", fstream::out);
-        fstream outputlog;
-        outputlog.open("outputECG.tsv", fstream::out);
-        fstream signallog;
-        signallog.open("signalECG.tsv", fstream::out);
-        fstream controllog;
-        controllog.open("controlECG.tsv", fstream::out);
+
         controllog << control << endl;
         signallog << signal << endl;
         outputlog << outPut << endl;
