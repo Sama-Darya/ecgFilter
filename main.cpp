@@ -60,6 +60,8 @@ boost::circular_buffer<double> signalBuffer(1000);
 boost::circular_buffer<double> signalrawBuffer(1000);
 boost::circular_buffer<double> corrLMSBuffer(1000);
 boost::circular_buffer<double> errorLMSBuffer(1000);
+boost::circular_buffer<double> weightDistBuffer(1000);
+
 
 
 
@@ -157,7 +159,7 @@ int main(int argc, const char *argv[]) {
 
 
 //initialise plots
-    cv::Mat Learningframe = cv::Mat(cv::Size(1000, 610), CV_8UC3);
+    cv::Mat Learningframe = cv::Mat(cv::Size(1500, 610), CV_8UC3);
     cvui::init(WINDOW_NAME1, 20);
 
 //initialise the network
@@ -247,6 +249,9 @@ int main(int argc, const char *argv[]) {
         net->propError();
         //do learning on the weights
         net->updateWeights();
+        net->saveWeights();
+        double weightDist = net->getWeightDistance();
+        //double weightDist = net->getWeights(2,0,2);
 
         //LMS filter
         for (int i=0; i<totalNINPUTS; i++){
@@ -283,9 +288,13 @@ int main(int argc, const char *argv[]) {
         zAccBufferDelayMax.push_back(inputsDelayed[14]); // this is zAcc max delay
         corrLMSBuffer.push_back(corrLMS);
         errorLMSBuffer.push_back(errorLMS);
+        weightDistBuffer.push_back(weightDist);
         
         
 //making vectors for plotting
+        std::vector<double> weightDistPlot(weightDistBuffer.begin(), weightDistBuffer.end());
+
+
         std::vector<double> xAccPlot(xAccBuffer.begin(), xAccBuffer.end());
         std::vector<double> xAccPlotDelayMin(xAccBufferDelayMin.begin(), xAccBufferDelayMin.end());
         std::vector<double> xAccPlotDelayMax(xAccBufferDelayMax.begin(), xAccBufferDelayMax.end());
@@ -332,9 +341,14 @@ int main(int argc, const char *argv[]) {
         int barCenter = graphH / 2;
         int textCenter = barCenter - graphOffset;
 
+        int weightW = 450;
+
 
 //plotting
         Learningframe = cv::Scalar(180, 180, 180);
+
+        cvui::sparkline(Learningframe, weightDistPlot, graphW + 3 * graphOffset + barL , graphH * 0, weightW, graphH * 3 , 0xffffff);
+
 
         cvui::sparkline(Learningframe, xAccPlot, graphOffset, graphH * 0, graphW, graphH, 0xffffff);
         cvui::sparkline(Learningframe, xAccPlotDelayMin, graphOffset, graphH * 0, graphW, graphH, 0xffff99);

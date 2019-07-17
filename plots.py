@@ -33,11 +33,11 @@ def rmsValue(arr, n):
       
     return root
 
-dataECG=np.loadtxt('./cmake-build-debug/sub00walk.tsv');
-dataError=np.loadtxt('./cmake-build-debug/errorECG.tsv');
-dataOutput=np.loadtxt('./cmake-build-debug/outputECG.tsv');
-dataSignal=np.loadtxt('./cmake-build-debug/signalECG.tsv');
-dataControl=np.loadtxt('./cmake-build-debug/controlECG.tsv');
+dataECG=np.loadtxt('./results/dataset02/sub00walk.tsv');
+dataError=np.loadtxt('./results/dataset02/errorECG.tsv');
+dataOutput=np.loadtxt('./results/dataset02/outputECG.tsv');
+dataSignal=np.loadtxt('./results/dataset02/signalECG.tsv');
+dataControl=np.loadtxt('./results/dataset02/controlECG.tsv');
 
 control=dataECG[:,0]
 signal2=dataECG[:,1]
