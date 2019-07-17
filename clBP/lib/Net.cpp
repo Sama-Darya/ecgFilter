@@ -60,7 +60,7 @@ void Net::propInputs(){
         }
     }
     layers[nLayers-1]->calcOutputs();
-    /* this calculates the final outoup of the network,
+    /* this calculates the final output of the network,
      * i.e. the output of the final layer
      * but this is not fed into any further layer*/
 }
@@ -88,9 +88,9 @@ Layer* Net::getLayer(int _layerIndex){
 
 void Net::propError(){
     for (int i=nLayers-2; i>-1 ; i--){ // i is idx of curr layer
-        for (int j=0; j<layers[i]->getnNeurons();j++){ // j is neuron idx in current layer
+        for (int j=0; j<layers[i]->getnNeurons();j++){ // j is neuron idx in current neuron
             double sum=0;
-            for (int k=0; k<layers[i+1]->getnNeurons(); k++){ // j is neuron idx in next layer
+            for (int k=0; k<layers[i+1]->getnNeurons(); k++){ // k is neuron idx in next neuron
                 double error = layers[i+1]->getError(k);
                 double weight = layers[i+1]->getWeights(k,j);
                 sum += error * weight;

@@ -9,5 +9,5 @@ find_package(OpenCV REQUIRED)
 
 find_package(Boost REQUIRED)
 
-add_executable(ecgFilter main.cpp parameters.h cvui.h)
-target_link_libraries(ecgFilter clBP iir_static ${OpenCV_LIBS})
+add_executable(ecgFilter main.cpp bandpass.cpp parameters.h cvui.h bandpass.h)
+target_link_libraries(ecgFilter clBP iir_static fir ${OpenCV_LIBS})

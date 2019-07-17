@@ -31,13 +31,13 @@ def rmsValue(arr, n):
     #Calculate Root 
     root = math.sqrt(mean) 
       
-    return mean
+    return root
 
-dataECG=np.loadtxt('./cmake-build-debug/sub00walk.tsv');
-dataError=np.loadtxt('./cmake-build-debug/errorECG2.tsv');
-dataOutput=np.loadtxt('./cmake-build-debug/outputECG2.tsv');
-dataSignal=np.loadtxt('./cmake-build-debug/signalECG2.tsv');
-dataControl=np.loadtxt('./cmake-build-debug/controlECG2.tsv');
+dataECG=np.loadtxt('./results/dataset01/sub00walk.tsv');
+dataError=np.loadtxt('./results/dataset01/errorECG.tsv');
+dataOutput=np.loadtxt('./results/dataset01/outputECG.tsv');
+dataSignal=np.loadtxt('./results/dataset01/signalECG.tsv');
+dataControl=np.loadtxt('./results/dataset01/controlECG.tsv');
 
 control=dataECG[:,0]
 signal2=dataECG[:,1]
@@ -50,23 +50,30 @@ power3 = rmsValue(signal3, len(signal3))
 
 plt.figure()
 plt.subplot(311)
-plt.plot(xAcc[4000::])
+plt.plot(xAcc[0::])
 plt.subplot(312)
-plt.plot(yAcc[4000::])
+plt.plot(yAcc[0::])
 plt.subplot(313)
-plt.plot(zAcc[4000::])
+plt.plot(zAcc[0::])
 
-plt.figure()
-plt.subplot(411)
+
+dataSignal = dataSignal/ max(abs(dataSignal))
+dataOutput2 = dataOutput +  abs(min(dataOutput))
+dataOutput3 =  - dataOutput2 / max(dataOutput2)
+
+experiment = dataSignal - 100 * dataOutput3
+
+
+plt.figure('this one')
+plt.subplot(311)
 plt.plot(dataSignal[4000::])
-plt.subplot(412)
-plt.plot(dataOutput[4000::])
-plt.subplot(413)
-plt.plot(dataError[4000::])
-plt.subplot(414)
-plt.plot(dataControl[4000::])
+plt.subplot(312)
+plt.plot(dataOutput3[4000::])
+plt.subplot(313)
+plt.plot(experiment[4000::])
 
-diff = dataSignal[4000::] - dataError[4000::]
 
-plt.figure()
-plt.plot(diff*100000)
+#diff = dataSignal[4000::] - dataError[4000::]
+#
+#plt.figure()
+#plt.plot(diff*100000)

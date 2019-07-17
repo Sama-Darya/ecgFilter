@@ -76,16 +76,16 @@ void Neuron::calcOutput(){
     /* making copies of the pointers for the scope of this
  * funciton so that the original pinters are unchanged and can
  * be used as a reference in other functiond simultaneously */
-    sum=0;
+    double sumCal=0;
     for (int i=0; i<nInputs; i++){
         double input= *inputsp;
         double weight= *weightsp;
-        sum += input * weight;
+        sumCal += input * weight;
         inputsp++;
         weightsp++;
     }
-    sum += bias;
-    doActivation(sum);
+    sumCal += bias;
+    doActivation(sumCal);
 }
 
 double Neuron::getOutput(){
@@ -97,12 +97,14 @@ double Neuron::getSumOutput(){
 }
 
 double Neuron::doActivation(double _sum){
-    output=1/(1+(exp(-_sum))); // - 0.5;
+    output=1/(1+(exp(-_sum))) - 0.5;
+    //output= tanh(_sum);
     return (output);
 }
 
 double Neuron::doActivationPrime(double _input){
     return exp(-_input) / pow((exp(-_input) + 1), 2);
+    //return (1 - pow(tanh(_input), 2));
 }
 
 void Neuron::setLearningRate(double _learningRate){
@@ -115,7 +117,7 @@ void Neuron::setError(double _leadError){
 }
 
 void Neuron::propError(double _nextSum){
-    error = _nextSum * doActivationPrime(sum);
+    error = _nextSum; //* doActivationPrime(sum);
     //cout<< "_nextSum was: "<< _nextSum << "and dSigmadt is: " << doActivationPrime(sum) <<endl;
 }
 

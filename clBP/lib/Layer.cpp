@@ -90,7 +90,7 @@ double Layer::getWeightChange(){
     for (int i=0; i<nNeurons; i++){
         weightChange += neurons[i]->getWeightChange();
     }
-    cout<< "Layer: WeightChange is: " << weightChange << endl;
+    //cout<< "Layer: WeightChange is: " << weightChange << endl;
     return (weightChange);
 }
 
