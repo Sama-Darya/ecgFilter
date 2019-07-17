@@ -2,17 +2,15 @@
 
 #include "Layer.h"
 
-
-class Net
-{
+class Net {
 public:
-    Net(int _nLayers, int* _nNeurons, int _nInputs);
+    Net(int _nLayers, int *_nNeurons, int _nInputs);
     ~Net();
-    Layer* getLayer(int _layerIndex);
+    Layer *getLayer(int _layerIndex);
     void initWeights(Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim);
 
     void setLearningRate(double _learningRate);
-    void setInputs(const double* _inputs);
+    void setInputs(const double *_inputs);
     void propInputs();
     void setError(double _leadError);
     void propError();
@@ -30,11 +28,11 @@ public:
     void printNetwork();
 
 private:
-    int nLayers=0;
-    int nInputs=0;
-    int nOutputs=0;
-    const double* inputs=0;
-    Layer** layers=0;
-    double learningRate=0;
+    int nLayers = 0;
+    int nInputs = 0;
+    int nOutputs = 0;
+    const double *inputs = 0;
+    Layer **layers = 0;
+    double learningRate = 0;
     int nNeurons;
 };

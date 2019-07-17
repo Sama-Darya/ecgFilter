@@ -1,14 +1,12 @@
 #pragma once
 #include "Neuron.h"
 
-
-class Layer
-{
+class Layer {
 public:
     Layer(int _nNeurons, int _nInputs);
     ~Layer();
 
-    void setInputs(const double* _inputs); //only for the first layer
+    void setInputs(const double *_inputs); // only for the first layer
     void initWeights(Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim);
     void calcOutputs();
     double getOutput(int _neuronIndex);
@@ -23,18 +21,20 @@ public:
     double getWeights(int _neuronIndex, int _weightIndex);
     double getInitWeight(int _neuronIndex, int _weightIndex);
     double getWeightChange();
+    double getWeightDistance();
     void setError(double _leadError);
     void updateWeights();
     int saveWeights(int _layerIndex, int _neuronCount);
-    void snapWeights(int _layerIndex); // This one just saves the final weights i.e. overwrites them
+    void snapWeights(int _layerIndex); // This one just saves the final weights
+    // i.e. overwrites them
 
-    Neuron* getNeuron(int _neuronIndex);
+    Neuron *getNeuron(int _neuronIndex);
 
 private:
-    int nNeurons=0;
-    int nInputs=0;
-    const double* inputs=0;
-    Neuron** neurons=0;
-    double learningRate=0;
-    //double weightChange=0;
+    int nNeurons = 0;
+    int nInputs = 0;
+    const double *inputs = 0;
+    Neuron **neurons = 0;
+    double learningRate = 0;
+    double weightChange=0;
 };

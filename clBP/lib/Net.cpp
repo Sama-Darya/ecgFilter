@@ -60,7 +60,7 @@ void Net::propInputs(){
         }
     }
     layers[nLayers-1]->calcOutputs();
-    /* this calculates the final output of the network,
+    /* this calculates the final outoup of the network,
      * i.e. the output of the final layer
      * but this is not fed into any further layer*/
 }
@@ -87,18 +87,21 @@ Layer* Net::getLayer(int _layerIndex){
 }
 
 void Net::propError(){
-    for (int i=nLayers-2; i>-1 ; i--){ // i is idx of curr layer
-        for (int j=0; j<layers[i]->getnNeurons();j++){ // j is neuron idx in current neuron
+    double tempError=0;
+    double tempWeight=0;
+    for (int i=nLayers-1; i>0 ; i--){
+        for (int k=0; k<layers[i-1]->getnNeurons();k++){
             double sum=0;
-            for (int k=0; k<layers[i+1]->getnNeurons(); k++){ // k is neuron idx in next neuron
-                double error = layers[i+1]->getError(k);
-                double weight = layers[i+1]->getWeights(k,j);
-                sum += error * weight;
+            for (int j=0; j<layers[i]->getnNeurons(); j++){
+                tempError=layers[i]->getError(j);
+                tempWeight=layers[i]->getWeights(j,k);
+                sum+=tempError * tempWeight;
             }
-            layers[i]->propError(j, sum);
+            layers[i-1]->propError(k, sum);
         }
     }
 }
+
 void Net::setError(double _leadError){
     /* this is only for the final layer */
     layers[nLayers-1]->setError(_leadError);
@@ -113,22 +116,15 @@ void Net::updateWeights(){
 }
 
 double Net::getWeightDistance(){
-    double weightChange = 0;
+    double weightChange = 0 ;
+    double weightDistance =0;
     for (int i=0; i<nLayers; i++){
         weightChange += layers[i]->getWeightChange();
     }
-    weightChange = sqrt(weightChange);
-    // cout<< "Net: WeightDistance is: " << weightChange << endl;
+    weightDistance=sqrt(weightChange);
+    cout<< "Net: WeightDistance is: " << weightDistance << endl;
 
-    return (weightChange);
-}
-
-double Net::getWeightDistanceLayer(int _layerIndex){
-    double weightChange = 0;
-    weightChange += layers[_layerIndex]->getWeightChange();
-    weightChange = sqrt(weightChange);
-    cout<< "Net: WeightDistance is: " << weightChange << endl;
-    return (weightChange);
+    return (weightDistance);
 }
 
 double Net::getWeights(int _layerIndex, int _neuronIndex, int _weightIndex){
@@ -150,7 +146,7 @@ int Net::getnNeurons(){
 void Net::saveWeights(){
     int neuronCount = 0;
     for (int i=0; i<nLayers; i++){
-        //neuronCount += layers[i]->saveWeights(i, neuronCount);
+        neuronCount += layers[i]->saveWeights(i, neuronCount);
         layers[i]->snapWeights(i);
     }
 }
