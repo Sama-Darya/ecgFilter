@@ -95,14 +95,14 @@ double Neuron::getSumOutput(){
 }
 
 double Neuron::doActivation(double _sum){
-    output=1/(1+(exp(-_sum))) - 0.5;
-    //output = tanh(_sum);
+    //output=1/(1+(exp(-_sum))) - 0.5;
+    output = tanh(_sum);
     return (output);
 }
 
 double Neuron::doActivationPrime(double _input){
-    double result = exp(-_input) / pow((exp(-_input) + 1),2);
-    //double result = 1 - pow (tanh(_input), 2);
+    //double result = exp(-_input) / pow((exp(-_input) + 1),2);
+     double result = 1 - pow (tanh(_input), 2);
     //double result= (doActivation(_input) + 0.5) * (1 - doActivation(_input) + 0.5);
     return (result);
 }

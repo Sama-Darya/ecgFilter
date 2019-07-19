@@ -73,7 +73,7 @@ plt.subplot(313)
 plt.plot(dataError[4000::])
 
 
-#diff = dataSignal[4000::] - dataError[4000::]
-#
-#plt.figure()
-#plt.plot(diff*100000)
+diff = dataSignal[4000::] - dataError[4000::]
+
+plt.figure()
+plt.plot(diff)

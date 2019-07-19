@@ -45,24 +45,28 @@ double yAccGain = 1;
 double zAccGain = 1;
 
 //creat circular buffers for plotting
-boost::circular_buffer<double> xAccBuffer(1000);
-boost::circular_buffer<double> xAccBufferDelayMin(1000);
-boost::circular_buffer<double> xAccBufferDelayMax(1000);
-boost::circular_buffer<double> yAccBuffer(1000);
-boost::circular_buffer<double> yAccBufferDelayMin(1000);
-boost::circular_buffer<double> yAccBufferDelayMax(1000);
-boost::circular_buffer<double> zAccBuffer(1000);
-boost::circular_buffer<double> zAccBufferDelayMin(1000);
-boost::circular_buffer<double> zAccBufferDelayMax(1000);
-boost::circular_buffer<double> errorBuffer(1000);
-boost::circular_buffer<double> outputBuffer(1000);
-boost::circular_buffer<double> signalBuffer(1000);
-boost::circular_buffer<double> signalrawBuffer(1000);
-boost::circular_buffer<double> corrLMSBuffer(1000);
-boost::circular_buffer<double> errorLMSBuffer(1000);
-boost::circular_buffer<double> weightDistBuffer(1000);
+const int bufferLength = 500 ;
+boost::circular_buffer<double> xAccBuffer(bufferLength);
+boost::circular_buffer<double> xAccBufferDelayMin(bufferLength);
+boost::circular_buffer<double> xAccBufferDelayMax(bufferLength);
+boost::circular_buffer<double> yAccBuffer(bufferLength);
+boost::circular_buffer<double> yAccBufferDelayMin(bufferLength);
+boost::circular_buffer<double> yAccBufferDelayMax(bufferLength);
+boost::circular_buffer<double> zAccBuffer(bufferLength);
+boost::circular_buffer<double> zAccBufferDelayMin(bufferLength);
+boost::circular_buffer<double> zAccBufferDelayMax(bufferLength);
+boost::circular_buffer<double> errorBuffer(bufferLength);
+boost::circular_buffer<double> outputBuffer(bufferLength);
+boost::circular_buffer<double> signalBuffer(bufferLength);
+boost::circular_buffer<double> signalrawBuffer(bufferLength);
+boost::circular_buffer<double> corrLMSBuffer(bufferLength);
+boost::circular_buffer<double> errorLMSBuffer(bufferLength);
+boost::circular_buffer<double> weightDistBuffer(bufferLength);
 
 
+//signal buffer for delay
+const int ecgBufferLength = 75 ;
+boost::circular_buffer<double> ecgDelayBuffer(ecgBufferLength);
 
 
 int main(int argc, const char *argv[]) {
@@ -159,7 +163,7 @@ int main(int argc, const char *argv[]) {
 
 
 //initialise plots
-    cv::Mat Learningframe = cv::Mat(cv::Size(1500, 610), CV_8UC3);
+    cv::Mat Learningframe = cv::Mat(cv::Size(1000, 610), CV_8UC3);
     cvui::init(WINDOW_NAME1, 20);
 
 //initialise the network
@@ -190,14 +194,23 @@ int main(int argc, const char *argv[]) {
 
 //filter the signals with the 50Hz removal filter
         signalintermediate = lp.filter(signalraw);
-        double signaltemp = iirnotch.filter(signalintermediate);
+        double signalTemporary = iirnotch.filter(signalintermediate);
 
 //filer signal with a bandpass
 #ifdef doECGBP
-        double signal = ecgBP.filter(signaltemp);
+        double temporarySignal = ecgBP.filter(signaltemp);
 #else
-        double signal = signaltemp;
+        double temporarySignal = signalTemporary;
 #endif
+
+        ecgDelayBuffer.push_back(temporarySignal);
+
+#ifdef doECGdelay
+        double signal = ecgDelayBuffer[0];
+#else
+        double signal = temporarySignal;
+#endif
+
 
 //high-pass filter the xyz accelerations and set them as the inputs to the network and LMS filter
         acc[0]= xAcc;// -30;
@@ -232,12 +245,14 @@ int main(int argc, const char *argv[]) {
                 k++;
                 }
             }
-        double* inputsDelayedPointer = &inputsDelayed[0];
 #else
-        double* inputsDelayedPointer = &inputs[0];
+        for (int i=0; i<totalNINPUTS; i++){
+            inputsDelayed[i]=inputs[i];
+        }
 #endif
 
         //propagate the inputs
+        double* inputsDelayedPointer = &inputsDelayed[0];
         net->setInputs(inputsDelayedPointer);
         net->propInputs();
         //get the network's output
@@ -347,7 +362,7 @@ int main(int argc, const char *argv[]) {
 //plotting
         Learningframe = cv::Scalar(180, 180, 180);
 
-        cvui::sparkline(Learningframe, weightDistPlot, graphW + 3 * graphOffset + barL , graphH * 0, weightW, graphH * 3 , 0xffffff);
+        //cvui::sparkline(Learningframe, weightDistPlot, graphW + 3 * graphOffset + barL , graphH * 0, weightW, graphH * 3 , 0xffffff);
 
 
         cvui::sparkline(Learningframe, xAccPlot, graphOffset, graphH * 0, graphW, graphH, 0xffffff);

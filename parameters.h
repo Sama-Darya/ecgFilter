@@ -10,7 +10,7 @@
 #define N1 9
 #define N2 3
 #define N3 1 //this has to always be 1
-#define LEARNINGRATE 0.1
+#define LEARNINGRATE 0.051
 
 
 /* High-pass filter for the accelerations:
@@ -44,21 +44,22 @@
 
 //#define doECGBP
 #ifdef doECGBP
-    #define Tdelay 100
+    #define Tdelay 50
     #define Damping 0.51
 #endif
 
+#define doECGdelay
 
 /*
  * LMS filter specifications
  */
-#define LMS_COEFF (int)(10000)
-#define LEARNING_RATE 0.00001
+#define LMS_COEFF (int)(250)
+#define LEARNING_RATE 0.000001
 
 /*
  * plot related definitions
  */
-#define WINDOW_NAME1 "Learning's plots"
+#define WINDOW_NAME1 "plots"
 
 #endif //ECGFILTER_PARAMETERS_H
 
