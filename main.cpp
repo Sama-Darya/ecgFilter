@@ -36,7 +36,6 @@ int* nNeuronsp=nNeurons;
 Net* net = new Net(NLAYERS, nNeuronsp, totalNINPUTS);
 
 
-
 // define gains
 double errorGain = 1;
 double outputGain = 1;
@@ -167,7 +166,7 @@ int main(int argc, const char *argv[]) {
     cvui::init(WINDOW_NAME1, 20);
 
 //initialise the network
-    net->initWeights(Neuron::W_RANDOM, Neuron::B_NONE);
+    net->initNetwork(Neuron::W_RANDOM, Neuron::B_NONE, Neuron::Act_Sigmoid);
     net->setLearningRate(LEARNINGRATE);
     double  acc[NINPUTS];
     double  accFiltered[NINPUTS];
@@ -190,7 +189,7 @@ int main(int argc, const char *argv[]) {
             //cout << "iteration " << i ;
 
 //decide what signal to use II or III
-        double signalraw = signal2raw;
+        double signalraw = 1000 * signal2raw;
 
 //filter the signals with the 50Hz removal filter
         signalintermediate = lp.filter(signalraw);
@@ -198,7 +197,7 @@ int main(int argc, const char *argv[]) {
 
 //filer signal with a bandpass
 #ifdef doECGBP
-        double temporarySignal = ecgBP.filter(signaltemp);
+        double temporarySignal = ecgBP.filter(signalTemporary);
 #else
         double temporarySignal = signalTemporary;
 #endif
@@ -213,9 +212,9 @@ int main(int argc, const char *argv[]) {
 
 
 //high-pass filter the xyz accelerations and set them as the inputs to the network and LMS filter
-        acc[0]= xAcc;// -30;
-        acc[1]= yAcc;// +18;
-        acc[2]= zAcc;// +3;
+        acc[0]= 1000 * (xAcc -30);
+        acc[1]= 1000 * (yAcc +18);
+        acc[2]= 1000 * (zAcc +3);
 
 #ifdef doAccHP
         for (int i=0; i<NINPUTS; i++){
@@ -289,8 +288,10 @@ int main(int argc, const char *argv[]) {
 
 //put the data in their buffers
         errorBuffer.push_back(leadError);
+
         outputBuffer.push_back(outPut);
         signalBuffer.push_back(signal);
+        cout << signalBuffer[0] << " " << signalBuffer[499] << " " << signal << endl;
         signalrawBuffer.push_back(signal2raw);
         xAccBuffer.push_back(inputs[0]); // this is xAcc
         xAccBufferDelayMin.push_back(inputsDelayed[0]); // this is xAcc min delay

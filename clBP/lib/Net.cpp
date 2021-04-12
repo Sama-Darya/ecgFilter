@@ -30,6 +30,8 @@ Net::Net(int _nLayers, int* _nNeurons, int _nInputs)
     for (int i=0; i<nLayers; i++){
         nNeurons += layers[i]->getnNeurons();
     }
+    
+    cout << "number of inputs are: " << nInputs << endl;
 }
 
 Net::~Net(){
@@ -45,9 +47,9 @@ void Net::setInputs(const double* _inputs){
     layers[0]->setInputs(inputs); //sets the inputs to the first layer only
 }
 
-void Net::initWeights(Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim){
+void Net::initNetwork(Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim, Neuron::actMethod _am){
     for (int i=0; i<nLayers; i++){
-        layers[i]->initWeights(_wim, _bim);
+        layers[i]->initLayer(_wim, _bim, _am);
     }
 }
 
@@ -125,6 +127,10 @@ double Net::getWeightDistance(){
     // cout<< "Net: WeightDistance is: " << weightDistance << endl;
 
     return (weightDistance);
+}
+
+double Net::getLayerWeightDistance(int _layerIndex){
+    return sqrt(layers[_layerIndex]->getWeightChange());
 }
 
 double Net::getWeights(int _layerIndex, int _neuronIndex, int _weightIndex){

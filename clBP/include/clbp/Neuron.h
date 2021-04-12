@@ -13,13 +13,15 @@ public:
     ~Neuron();
     enum biasInitMethod { B_NONE = 0, B_RANDOM = 1 };
     enum weightInitMethod { W_ZEROS = 0, W_ONES = 1, W_RANDOM = 2 };
+    enum actMethod {Act_Sigmoid = 0, Act_Tanh = 1, Act_NONE = 2};
 
-    void initWeights(weightInitMethod _wim, biasInitMethod _bim);
+    void initNeuron(weightInitMethod _wim, biasInitMethod _bim, Neuron::actMethod _am);
     void setLearningRate(double _learningRate);
 
     void setInput(int _index, double _value);
     void propInputs(int _index, double _value);
     void calcOutput();
+    void genOutput();
     void updateWeights();
     double doActivation(double _sum);
     double doActivationPrime(double _input);
@@ -53,4 +55,5 @@ private:
     double learningRate = 0;
     double sum = 0;
     double weightChange=0;
+    int actMet = 0;
 };

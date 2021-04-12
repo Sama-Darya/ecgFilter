@@ -29,6 +29,7 @@ Layer::~Layer(){
 }
 
 void Layer::setInputs(const double* _inputs){
+    /*this is only for the first layer*/
     inputs=_inputs;
     for (int j=0; j<nInputs; j++){
         Neuron** neuronsp = neurons;//point to the 1st neuron
@@ -55,6 +56,12 @@ void Layer::propInputs(int _index, double _value){
 void Layer::calcOutputs(){
     for (int i=0; i<nNeurons; i++){
         neurons[i]->calcOutput();
+    }
+}
+
+void Layer::genOutput(){
+    for (int i=0; i<nNeurons; i++){
+        neurons[i]->genOutput();
     }
 }
 
@@ -104,9 +111,9 @@ double Layer::getOutput(int _neuronIndex){
 }
 
 
-void Layer::initWeights(Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim){
+void Layer::initLayer(Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim, Neuron::actMethod _am){
     for (int i=0; i<nNeurons; i++){
-        neurons[i]->initWeights(_wim, _bim);
+        neurons[i]->initNeuron(_wim, _bim, _am);
     }
 }
 
@@ -131,14 +138,29 @@ int Layer::saveWeights(int _layerIndex, int _neuronCount){
     char l = '0';
     char n = '0';
     l += _layerIndex + 1;
+    char decimal = '0';
+    bool skip = true;
     for (int i=0; i<nNeurons; i++){
+        if (skip == true){
+            n += 1;
+            }
+            if(skip == false){
+                skip = true;
+            }
         _neuronCount += 1;
-        string name = "neuronWeight";
-        n += 1;
+        string name = "w";
+        name += 'L';
         name += l;
+        name += 'N';
+        name += decimal;
         name += n;
-        name += ".txt";
+        name += ".csv";
         neurons[i]->saveWeights(name);
+        if (n == '9'){
+            decimal += 1;
+            n= '0';
+            skip = false;
+        }
     }
     return (_neuronCount);
 }
@@ -147,9 +169,9 @@ void Layer::snapWeights(int _layerIndex){
     std::ofstream wfile;
     char l = '0';
     l += _layerIndex + 1;
-    string name = "layerWeight";
+    string name = "wL";
     name += l;
-    name += ".txt";
+    name += ".csv";
     wfile.open(name);
     for (int i=0; i<nNeurons; i++){
         for (int j=0; j<nInputs; j++){

@@ -10,12 +10,12 @@
 #define N1 9
 #define N2 3
 #define N3 1 //this has to always be 1
-#define LEARNINGRATE 0.051
+#define LEARNINGRATE 0.0000001
 
 
 /* High-pass filter for the accelerations:
  */
-//#define doAccHP
+#define doAccHP
 #ifdef doAccHP
     #define HP_CUTOFF 0.1
 #endif
@@ -23,14 +23,14 @@
 
 /* Low-pass filter for the accelerations:
  */
-//#define doAccLP
+#define doAccLP
 #ifdef doAccLP
 #define LP_CUTOFF 20
 #endif
 
 /*Band-pass filter for the accelerations:
  */
-//#define doAccBP
+#define doAccBP
 #ifdef doAccBP
     #define NbpFilters 5
     #define MINT 50
@@ -42,7 +42,7 @@
  * Bandpass filter for the ECG signal to cause delay
  */
 
-//#define doECGBP
+#define doECGBP
 #ifdef doECGBP
     #define Tdelay 50
     #define Damping 0.51
